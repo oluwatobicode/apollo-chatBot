@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useResetPassword } from "../../contexts/ResetPasswordProvider";
 import Modal from "../../ui/Modal";
-import { toast } from "react-toastify";
 import { FaCheck } from "react-icons/fa";
 
 type InputProps = {
@@ -19,8 +18,7 @@ function OTPInput({ length = 6, onComplete, disabled = false }: InputProps) {
 
   console.log(isVerifying);
 
-  const { email, setOtp, goToNextStep, isLoading, setIsLoading } =
-    useResetPassword();
+  const { email, goToNextStep, isLoading, setIsLoading } = useResetPassword();
 
   const handleTextChange = (input: string, index: number) => {
     if (disabled || isLoading) return;

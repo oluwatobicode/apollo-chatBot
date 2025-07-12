@@ -4,10 +4,9 @@ import { AppDispatch, RootState } from "../../app/store";
 import {
   createNewConversation,
   sendMessageToAI,
-  setActiveConversation,
 } from "../../features/chat/chatSlice";
 import ChatBubble from "./ChatBubble";
-import { Mic, SendHorizontal, Menu, X } from "lucide-react";
+import { Mic, SendHorizontal, Menu } from "lucide-react";
 
 interface ChatProps {
   onToggleSidebar: () => void;

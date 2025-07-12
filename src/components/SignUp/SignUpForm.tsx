@@ -28,9 +28,7 @@ function SignUpForm({
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { isLoading } = useSelector((state: RootState) => state.auth);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

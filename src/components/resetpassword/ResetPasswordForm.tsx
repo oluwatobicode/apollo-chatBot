@@ -9,7 +9,7 @@ interface ResetPasswordData {
 
 const ResetPasswordForm = () => {
   const navigate = useNavigate();
-  const { email, otp, resetFlow, isLoading, setIsLoading } = useResetPassword();
+  const { email, resetFlow } = useResetPassword();
   const {
     register,
     watch,

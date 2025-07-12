@@ -2,7 +2,7 @@ import "./index.css";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ResetPasswordProvider } from "./contexts/ResetPasswordProvider";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 import Apollo from "./pages/Apollo";
 import Start from "./pages/Start";

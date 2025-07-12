@@ -17,6 +17,8 @@ function OTPInput({ length = 6, onComplete, disabled = false }: InputProps) {
   const [isVerifying, setIsVerifying] = useState(false);
   const navigate = useNavigate();
 
+  console.log(isVerifying);
+
   const { email, setOtp, goToNextStep, isLoading, setIsLoading } =
     useResetPassword();
 
@@ -44,25 +46,25 @@ function OTPInput({ length = 6, onComplete, disabled = false }: InputProps) {
     }
   };
 
-  const handleVerifyClick = async () => {
-    const pinString = OTP.join("");
-    if (pinString.length !== length) {
-      toast.error("Please enter the complete OTP");
-      return;
-    }
+  // const handleVerifyClick = async () => {
+  //   const pinString = OTP.join("");
+  //   if (pinString.length !== length) {
+  //     toast.error("Please enter the complete OTP");
+  //     return;
+  //   }
 
-    try {
-      setIsVerifying(true);
-      setOtp(pinString);
-      console.log("OTP collected:", pinString, "for email:", email);
+  //   try {
+  //     setIsVerifying(true);
+  //     setOtp(pinString);
+  //     console.log("OTP collected:", pinString, "for email:", email);
 
-      // this is a brief delay for UX
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    } catch (error) {
-      console.error("Error:", error);
-      setIsVerifying(false);
-    }
-  };
+  //     // this is a brief delay for UX
+  //     await new Promise((resolve) => setTimeout(resolve, 500));
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     setIsVerifying(false);
+  //   }
+  // };
 
   const handleResendOtp = () => {
     setIsVerifying(false);

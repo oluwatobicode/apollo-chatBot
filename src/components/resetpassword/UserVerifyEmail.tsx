@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useResetPassword } from "../../contexts/ResetPasswordProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import { clearError, resetUserPassword } from "../../features/auth/authSlice";
+import { clearError } from "../../features/auth/authSlice";
 
 interface userVerifyEmailData {
   email: string;
@@ -14,6 +14,8 @@ const UserVerifyEmail = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading } = useSelector((state: RootState) => state.auth);
+
+  console.log(isLoading);
 
   const {
     register,

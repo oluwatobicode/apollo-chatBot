@@ -66,7 +66,8 @@ function SignUpForm({
         })
       ).unwrap();
       console.log(result);
-      toast.success("Account created successfully!");
+      toast.success("Account created successfully! Check your mail");
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }

@@ -52,7 +52,7 @@ export const signInWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}/chat`,
+      redirectTo: `https://apollo-chat-bot-ashy.vercel.app/login`,
     },
   });
 

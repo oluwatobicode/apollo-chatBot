@@ -28,12 +28,12 @@ function OnBoarding() {
           >
             Sign Up
           </button>
-          <button
+          {/* <button
             onClick={() => navigate("/login")}
             className="text-textColor  text-[20px] font-fontOne font-semiBold leading-[25.6px]  border-2 border-textColor w-[350px] h-[50px] rounded-lg"
           >
             Continue with an account
-          </button>
+          </button> */}
 
           <div className="flex items-center justify-center gap-5">
             <span className="border-t-2 w-[100px] border-textColor "></span>

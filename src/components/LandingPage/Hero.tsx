@@ -20,7 +20,7 @@ function Hero() {
       </div>
 
       <div className="flex items-center justify-center gap-10">
-        <Link to="chat">
+        <Link to="start">
           <Button types="ButtonOne">Start Now</Button>
         </Link>
 

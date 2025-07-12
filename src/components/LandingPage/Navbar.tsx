@@ -52,7 +52,7 @@ function Navbar() {
 
         <div className="flex items-center justify-center gap-5">
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/start")}
             className="lg:w-[120px] lg:h-[39px] w-[150px] h-[50px] rounded-[5px] lg:text-[1rem] bg-textColor text-textColorSec font-fontOne"
           >
             Start Now

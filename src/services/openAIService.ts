@@ -1,6 +1,6 @@
 // import { GoogleGenAI } from "@google/genai";
 
-const GEMINI_API_KEY = "AIzaSyBu068Q-HLr_Oh5fxlcw00qnrrt_lDI5-U";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 export const sendPromptToOpenAI = async (
   messages: { role: string; content: string }[]

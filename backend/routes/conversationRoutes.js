@@ -1,7 +1,12 @@
 const express = require("express");
 const conversationController = require("../controllers/conversationController");
-const router = express();
+const authController = require("../controllers/authController");
+const router = express.Router();
 
+// this will apply authentication to ALL our routes in this router
+router.use(authController.protectedRoutes);
+
+// Now all our routes will be automatically protected
 router
   .route("/")
   .post(conversationController.createConversation)

@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const cookie = require("cookie-parser");
 
 // controllers
 
@@ -7,6 +8,7 @@ const morgan = require("morgan");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -15,6 +17,9 @@ app.use(express.json());
 
 // this is the middleware for making an HTTP request
 app.use(morgan("dev"));
+
+// this is the middleware that handles all cookie request
+app.use(cookieParser());
 
 // auth side
 app.use("/v1/api/auth", authRoutes);

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -54,6 +55,19 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now(),
+  },
+
+  resetPasswordToken: String,
+  resetPasswordTokenExpiresAt: Date,
+  verificationToken: String,
+  verificationTokenExpiresAt: Date,
 });
 
 // hashing our password
@@ -85,6 +99,31 @@ userSchema.methods.comparePasswords = async function (
   userPassword
 ) {
   return bcrypt.compare(candidatePassword, userPassword);
+};
+
+// this would create a verification-code for the user
+userSchema.methods.generateVerificationCode = function () {
+  const verifyToken = crypto.randomBytes(32).toString("hex");
+  this.verificationToken = crypto
+    .createHash("sha256")
+    .update(verifyToken)
+    .digest("hex");
+
+  this.verificationTokenExpiresAt = Date.now() + 10 * 1000 * 60;
+
+  return verifyToken;
+};
+
+userSchema.methods.generateResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetPasswordTokenExpiresAt = Date.now() + 10 * 1000 * 60;
+
+  return resetToken;
 };
 
 const User = mongoose.model("User", userSchema);

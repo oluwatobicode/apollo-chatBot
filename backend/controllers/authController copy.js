@@ -4,6 +4,23 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { promisify } = require("util");
 
+/**
+ * Generate JWT token for user authentication
+ *
+ * JWT Structure: HEADER.PAYLOAD.SIGNATURE (separated by dots)
+ *
+ * HEADER: {"alg":"HS256","typ":"JWT"} - Specifies signing algorithm
+ * PAYLOAD: {"id":"userId","iat":timestamp,"exp":timestamp} - User data & token metadata
+ * SIGNATURE: Cryptographic signature created using header+payload+secret
+ *
+ * Security Notes:
+ * - Payload is Base64 encoded (readable by anyone) - never store sensitive data
+ * - Signature prevents tampering - only server with JWT_SECRET can create valid tokens
+ * - Token is stateless - contains all info needed for authentication
+ *
+ * @param {string} id - User's database ID to embed in token payload
+ * @returns {string} - Complete JWT token for client authentication
+ */
 const generateAuthToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -44,35 +61,55 @@ exports.signUp = async (req, res) => {
   // extract everything here
   const signUpDetails = req.body;
 
-  try {
-    const newUser = await User.create(signUpDetails);
-    const verifyEmailToken = newUser.generateVerificationCode();
+  // 1) creating a user
+  const newUser = await User.create(signUpDetails);
+  const verifyEmailToken = newUser.generateVerificationCode();
 
-    console.log("verify email here:", verifyEmailToken);
-    const token = generateAuthToken(newUser._id);
+  console.log("verify email here:", verifyEmailToken);
+  const token = generateAuthToken(newUser._id);
 
-    res.status(201).json({
-      status: "Sign Up successful",
-      token,
-    });
+  // await User.findByIdAndUpdate(newUser._id, {
+  //   verificationToken: newUser.verificationToken,
+  //   verificationTokenExpiresAt: newUser.verificationTokenExpiresAt,
+  // });
 
-    await sendEmail({
-      email: newUser.email,
-      subject: "Welcome to Apollo Chatbot! 🚀",
-      html: `
-    <h2>Welcome aboard, ${newUser.firstName}!</h2>
-    <p>Your email has been verified successfully.</p>
-    <p>You're all set to start chatting with Apollo...</p>
-
-  `,
-    });
-  } catch (error) {
-    res.status(401).json({
-      status: "fail",
-      message: error.message,
-    });
-  }
+  res.status(201).json({
+    status: "Sign Up successful",
+    token,
+    data: {
+      newUser,
+    },
+  });
 };
+
+// exports.logIn = async (req, res) => {
+//   // 1) extract the relevant information from here
+//   const { email, password } = req.body;
+
+//   // 2) check if the user put in his details
+//   if (!email && !password) {
+//     throw new Error("Kindly put in your email or password!");
+//   }
+
+//   // NOTE: findOne returns a single document object or null while find returns an array
+//   // The .select("+password") explicitly includes the password field despite select:false
+//   // in schema - this is intentional for auth operations but should never be sent to client
+//   const user = await User.findOne({ email }).select("+password");
+
+//   if (!user || !(await user.comparePasswords(password, user.password))) {
+//     throw new Error("Incorrect details!");
+//   }
+
+//   console.log(user);
+
+//   // when the user logs in we do not give them back their details
+//   const token = generateAuthToken(user._id);
+
+//   res.status(201).json({
+//     status: "success",
+//     token,
+//   });
+// };
 
 exports.login = async (req, res, next) => {
   try {
@@ -87,6 +124,9 @@ exports.login = async (req, res, next) => {
       });
     }
 
+    // NOTE: findOne returns a single document object or null while find returns an array
+    // The .select("+password") explicitly includes the password field despite select:false
+    // in schema - this is intentional for auth operations but should never be sent to client
     const user = await User.findOne({ email }).select("+password");
 
     if (!user || !(await user.comparePasswords(password, user.password))) {
@@ -192,25 +232,13 @@ exports.forgotPassword = async (req, res, next) => {
       await sendEmail({
         email: user.email,
         subject: "Your password reset token is only valid for 10 min",
-        message: message,
-        html: `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Password Reset Request</h2>
-      <p>Hi there!</p>
-      <p>We received a request to reset your Apollo Chatbot password.</p>
-      <a href="${message}" 
-         style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0;">
-        Reset My Password
-      </a>
-      <p>This link expires in 10 minutes.</p>
-      <p>If you didn't request this, please ignore this email.</p>
-    </div>
-  `,
+        message,
       });
     } catch (error) {
       user.resetPasswordToken = undefined;
       user.resetPasswordTokenExpiresAt = undefined;
       await user.save({ validateBeforeSave: false });
+
       return res.status(500).json({
         status: "error",
         message: "There was an error sending email. Please try again.",

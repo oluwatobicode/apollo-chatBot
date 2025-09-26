@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.use(authController.protectedRoutes);
 
-router.route("/profile").get(userController.getProfile);
+router.route("/:id").get(userController.getProfile);
 router.route("/profile").patch(userController.updateProfile);
 
 module.exports = router;

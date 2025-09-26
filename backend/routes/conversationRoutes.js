@@ -1,6 +1,7 @@
 const express = require("express");
 const conversationController = require("../controllers/conversationController");
 const authController = require("../controllers/authController");
+const messageController = require("../controllers/messageController");
 const router = express.Router();
 
 // this will apply authentication to ALL our routes in this router
@@ -15,6 +16,7 @@ router
 router
   .route("/:id")
   .get(conversationController.getConversationById)
+  .post(messageController.createMessage)
   .delete(conversationController.deleteConversation);
 
 module.exports = router;

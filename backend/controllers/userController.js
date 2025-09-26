@@ -1,14 +1,14 @@
-exports.getProfile = (req, res) => {
-  const user = {
-    name: "Treasure",
-    email: "odetokuntreasure6@gmail.com",
-    profilePicture: "https://example.com/profile.jpg",
-    country: "Nigeria",
-  };
+const User = require("../models/userModel");
+
+exports.getProfile = async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+
   res.status(200).json({
     status: "success",
     data: {
-      user: user,
+      user,
     },
   });
 };

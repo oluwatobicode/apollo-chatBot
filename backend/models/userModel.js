@@ -6,31 +6,31 @@ const crypto = require("crypto");
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    require: [true, "Please enter your name!"],
+    required: [true, "Please enter your name!"],
     trim: true,
   },
 
   lastName: {
     type: String,
-    require: [true, "Please enter your name!"],
+    required: [true, "Please enter your name!"],
     trim: true,
   },
   email: {
     type: String,
-    require: [true, "Please enter your email!"],
+    required: [true, "Please enter your email!"],
     unique: true,
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email"],
   },
   password: {
     type: String,
-    require: [true, "Please enter a password!"],
+    required: [true, "Please enter a password!"],
     minLength: 8,
     select: false,
   },
   passwordConfirm: {
     type: String,
-    require: [true, "Please enter a password"],
+    required: [true, "Please enter a password"],
     minLength: 8,
     validate: {
       validator: function (el) {
@@ -46,14 +46,13 @@ const userSchema = new mongoose.Schema({
   },
   country: {
     type: String,
-    require: true,
   },
   avatar: {
     type: String,
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
   isVerified: {
     type: Boolean,
@@ -61,7 +60,7 @@ const userSchema = new mongoose.Schema({
   },
   lastLogin: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 
   resetPasswordToken: String,

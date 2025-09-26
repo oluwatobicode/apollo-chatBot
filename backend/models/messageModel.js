@@ -1,19 +1,37 @@
 const mongoose = require("mongoose");
 
-const messageSchema = new mongoose.Schema({
-  text: {
-    type: String,
-    require: true,
+const messageSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+      required: [true, "Message text is required!"],
+      trim: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+    sender: {
+      type: String,
+      enum: {
+        values: ["User", "Bot"],
+        message: "Sender must either be a user or bot",
+      },
+      required: [true, "Message sender is required"],
+      default: "User",
+    },
+    conversation: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Conversation",
+      required: true,
+    },
   },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-  sender: {
-    type: String,
-    enum: ["User", "Bot"],
-  },
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true,
+  }
+);
 
 const Message = mongoose.model("Message", messageSchema);
 module.exports = Message;

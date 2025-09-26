@@ -1,54 +1,128 @@
 const Conversation = require("../models/conversationModel");
+const mongoose = require("mongoose");
+
+const checkIsValidId = (id) => {
+  return mongoose.isValidObjectId(id);
+};
 
 exports.createConversation = async (req, res) => {
-  const newConv = await Conversation.create(req.body);
+  try {
+    const newConv = await Conversation.create(req.body);
 
-  console.log(newConv);
+    console.log(newConv);
 
-  res.status(201).json({
-    status: "Conversation created successfully",
-    results: newConv.length,
-    data: {
-      data: newConv,
-    },
-  });
+    res.status(201).json({
+      status: "Conversation created successfully",
+      results: 1,
+      data: {
+        data: newConv,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 };
 
 exports.getAllConversation = async (req, res) => {
-  const allConv = await Conversation.find({ _id: req.params.id });
+  try {
+    const allConv = await Conversation.find();
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      allConv,
-    },
-  });
+    res.status(200).json({
+      status: "success",
+      results: allConv.length,
+      data: {
+        allConv,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 };
 
-exports.getConversationById = (req, res) => {
-  const conversationId = req.params.id;
-  console.log(`Fetching conversation with ID: ${conversationId}`);
-  res.status(200).json({
-    status: "success",
-    data: {
-      conversation: {
-        id: conversationId,
-        messages: [
-          { sender: "user", text: "Hello!" },
-          { sender: "bot", text: "Hi there! How can I help you?" },
-        ],
+exports.getConversationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Please provide a Conversation ID",
+      });
+    }
+
+    if (!checkIsValidId(id)) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid conversation ID forma",
+      });
+    }
+
+    const getConversation = await Conversation.findById(id)
+      .populate("messages")
+      .populate("user", "firstName lastName email");
+
+    if (!getConversation) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No conversation found with that ID",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        conversation: getConversation,
       },
-    },
-  });
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 };
 
 exports.deleteConversation = async (req, res) => {
-  console.log(req.params.id);
-  const conversationId = await Conversation.findByIdAndDelete(req.params.id);
+  const { id } = req.params;
+  try {
+    if (!id) {
+      return res.status(401).json({
+        status: "fail",
+        message: "Please provide a Conversation ID",
+      });
+    }
 
-  console.log(`Conversation with ID ${conversationId} deleted`);
-  res.status(204).json({
-    status: "Conversation deleted successfully",
-    data: null,
-  });
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid conversation ID format",
+      });
+    }
+
+    const conversationId = await Conversation.findByIdAndDelete(id);
+
+    if (!conversationId) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No conversation found with that ID",
+      });
+    }
+
+    console.log(`Conversation with ID ${conversationId} deleted`);
+    res.status(204).json({
+      status: "Conversation deleted successfully",
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 };

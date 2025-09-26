@@ -1,22 +1,26 @@
-exports.createConversation = (req, res) => {
-  const conversationDetails = req.body;
-  console.log(req.body);
+const Conversation = require("../models/conversationModel");
+
+exports.createConversation = async (req, res) => {
+  const newConv = await Conversation.create(req.body);
+
+  console.log(newConv);
+
   res.status(201).json({
     status: "Conversation created successfully",
+    results: newConv.length,
     data: {
-      conversation: conversationDetails,
+      data: newConv,
     },
   });
 };
 
-exports.getAllConversation = (req, res) => {
+exports.getAllConversation = async (req, res) => {
+  const allConv = await Conversation.find({ _id: req.params.id });
+
   res.status(200).json({
     status: "success",
     data: {
-      conversations: [
-        { id: 1, title: "General Inquiry" },
-        { id: 2, title: "Technical Support" },
-      ],
+      allConv,
     },
   });
 };
@@ -38,39 +42,13 @@ exports.getConversationById = (req, res) => {
   });
 };
 
-exports.deleteConversation = (req, res) => {
-  const conversationId = req.params.id;
+exports.deleteConversation = async (req, res) => {
+  console.log(req.params.id);
+  const conversationId = await Conversation.findByIdAndDelete(req.params.id);
+
   console.log(`Conversation with ID ${conversationId} deleted`);
   res.status(204).json({
     status: "Conversation deleted successfully",
     data: null,
-  });
-};
-
-exports.sendMessage = (req, res) => {
-  const conversationId = req.params.id;
-
-  const { content } = req.body;
-
-  console.log(conversationId, content);
-
-  res.status(200).json({
-    status: "Message sent successfully",
-    data: {
-      user: {
-        id: "msg_123",
-        conversationId: conversationId,
-        role: "user",
-        content: content,
-        timestamp: "2024-01-15T10:30:00Z",
-      },
-      bot: {
-        id: "msg_123",
-        conversationId: "conv_456",
-        role: "user",
-        content: "React is a javascript framework",
-        timestamp: "2024-01-15T10:30:00Z",
-      },
-    },
   });
 };

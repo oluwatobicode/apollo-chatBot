@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // hashing our password
-// we would first check if the password has been modified if it has not we would procced
+// we would first check if the password has been modified if it has not we would proceed
 // then we would directly modify the password by using the hashSync() and giving it a salt round of 10
 // Hash password before saving to database
 // Only hash if password field has been modified (new user or password change)

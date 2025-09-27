@@ -7,6 +7,7 @@ id, title, date
 MESSAGE TABLE
 {
 id, 
+sender,
 }
 
 */

@@ -4,8 +4,9 @@ const conversationSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "Conversation title is required!"],
+      required: false,
       trim: true,
+      default: "New conversation",
     },
     createdAt: {
       type: Date,

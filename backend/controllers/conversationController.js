@@ -1,3 +1,4 @@
+// const { GoogleGenAI } = require("@google/genai");
 const Conversation = require("../models/conversationModel");
 const mongoose = require("mongoose");
 
@@ -5,9 +6,10 @@ const checkIsValidId = (id) => {
   return mongoose.isValidObjectId(id);
 };
 
+// const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
 exports.createConversation = async (req, res) => {
   const conversationData = {
-    title: req.body.title,
     user: req.user.id,
   };
 

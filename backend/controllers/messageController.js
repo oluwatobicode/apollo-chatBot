@@ -12,15 +12,28 @@ const botResponse = async (text) => {
 
 exports.createMessage = async (req, res) => {
   try {
-    const newMessage = await Message.create(req.body);
+    const userMessage = await Message.create({
+      text: req.body.text,
+      sender: "User",
+      conversation: req.body.conversation,
+    });
+
     const response = await botResponse(req.body.text);
-    console.log("Full response", response);
-    console.log("Contracted Response", response.text);
+    console.log(response.text);
+
+    const botMessage = await Message.create({
+      text: response.text,
+      sender: "Bot",
+      conversation: req.body.conversation,
+    });
+    // console.log("Full response", response);
+    // console.log("Contracted Response", response.text);
 
     res.status(200).json({
       status: "success",
       data: {
-        newMessage,
+        userMessage,
+        botMessage,
       },
     });
   } catch (error) {

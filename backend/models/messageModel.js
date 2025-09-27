@@ -5,7 +5,6 @@ const messageSchema = new mongoose.Schema(
     text: {
       type: String,
       required: [true, "Message text is required!"],
-      trim: true,
     },
     timestamp: {
       type: Date,

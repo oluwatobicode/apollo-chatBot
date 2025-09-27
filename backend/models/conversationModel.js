@@ -18,7 +18,7 @@ const conversationSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, "A user must be included"],
     },
     isActive: {
       type: Boolean,

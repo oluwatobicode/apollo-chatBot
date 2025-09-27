@@ -96,6 +96,7 @@ exports.login = async (req, res, next) => {
       });
     }
     console.log(user);
+
     // Send token via cookie (  // when the user logs in we do not give them back their details)
     createSendToken(user, 200, res);
   } catch (error) {

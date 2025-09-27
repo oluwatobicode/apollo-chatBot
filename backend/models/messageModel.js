@@ -23,7 +23,7 @@ const messageSchema = new mongoose.Schema(
     conversation: {
       type: mongoose.Schema.ObjectId,
       ref: "Conversation",
-      required: true,
+      required: [true, "A conversation Id must be passed"],
     },
   },
   {

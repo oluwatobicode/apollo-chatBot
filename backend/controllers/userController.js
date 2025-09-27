@@ -13,6 +13,11 @@ exports.getProfile = async (req, res) => {
   });
 };
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 exports.updateProfile = (req, res) => {
   const updatedProfile = req.body;
   console.log(req.body);

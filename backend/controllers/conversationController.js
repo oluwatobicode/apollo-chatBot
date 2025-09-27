@@ -6,8 +6,15 @@ const checkIsValidId = (id) => {
 };
 
 exports.createConversation = async (req, res) => {
+  const conversationData = {
+    title: req.body.title,
+    user: req.user.id,
+  };
+
   try {
-    const newConv = await Conversation.create(req.body);
+    const newConv = await Conversation.create(conversationData);
+
+    console.log(req.params.id);
 
     console.log(newConv);
 
@@ -28,7 +35,7 @@ exports.createConversation = async (req, res) => {
 
 exports.getAllConversation = async (req, res) => {
   try {
-    const allConv = await Conversation.find();
+    const allConv = await Conversation.find({ user: req.user.id });
 
     res.status(200).json({
       status: "success",

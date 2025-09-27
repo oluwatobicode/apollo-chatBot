@@ -11,20 +11,45 @@ const botResponse = async (text) => {
 };
 
 exports.createMessage = async (req, res) => {
+  const { id } = req.params;
+
+  console.log(
+    "Conversation ID test:",
+    id,
+    "Conversation id test 2",
+    req.body.conversation
+  );
+
   try {
     const userMessage = await Message.create({
       text: req.body.text,
       sender: "User",
-      conversation: req.body.conversation,
+      conversation: id,
     });
 
-    const response = await botResponse(req.body.text);
+    const conversationHistory = await Message.find({
+      conversation: id,
+    }).sort({ timestamp: 1 });
+
+    const formattedHistory = conversationHistory.map((msg) => ({
+      role: msg.sender === "User" ? "user" : "model",
+      parts: [{ text: msg.text }],
+    }));
+
+    formattedHistory.push({
+      role: "user",
+      parts: [{ text: req.body.text }],
+    });
+
+    console.log(formattedHistory);
+
+    const response = await botResponse(formattedHistory);
     console.log(response.text);
 
     const botMessage = await Message.create({
       text: response.text,
       sender: "Bot",
-      conversation: req.body.conversation,
+      conversation: id,
     });
     // console.log("Full response", response);
     // console.log("Contracted Response", response.text);

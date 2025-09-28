@@ -6,6 +6,9 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: [true, "Message text is required!"],
     },
+    imageUrl: {
+      type: string,
+    },
     timestamp: {
       type: Date,
       default: Date.now,

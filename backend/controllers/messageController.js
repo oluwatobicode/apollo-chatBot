@@ -121,3 +121,6 @@ exports.createMessage = async (req, res) => {
     });
   }
 };
+
+// upload an image
+exports.uploadImage = async () => {};

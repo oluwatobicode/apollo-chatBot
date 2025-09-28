@@ -19,4 +19,6 @@ router
   .post(messageController.createMessage)
   .delete(conversationController.deleteConversation);
 
+router.route("/:id/upload").post(messageController.uploadImage);
+
 module.exports = router;

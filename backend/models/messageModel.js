@@ -7,7 +7,7 @@ const messageSchema = new mongoose.Schema(
       required: [true, "Message text is required!"],
     },
     imageUrl: {
-      type: string,
+      type: String,
     },
     timestamp: {
       type: Date,
@@ -34,6 +34,8 @@ const messageSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+/* trying to test something */
 
 const Message = mongoose.model("Message", messageSchema);
 module.exports = Message;
